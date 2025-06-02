@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { addtoCart } from '../features/cart/cartSlice';
+import { addToCart } from '../features/cart/cartSlice';
 import { toast } from 'react-toastify';
 
 
@@ -10,7 +10,7 @@ const ProductCard = ({ product })=>{
 
     const handleAddToCart = () => {
         
-        dispatch(addtoCart({ ...product, quantity: 1}));
+        dispatch(addToCart({ ...product, quantity: 1}));
         // toast("hello")
         // toast.success(`${product.title} added to cart!`);
 // toast.success(`${product.title} added to cart!`);         // Optionally, you can log the product or perform other actions

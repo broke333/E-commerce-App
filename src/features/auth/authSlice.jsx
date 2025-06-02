@@ -10,7 +10,13 @@ const authSlice = createSlice({
   reducers: {
     signup: (state, action) => {
       const { username, email, password } = action.payload;
-      
+      console.log('Users:', state.users);
+
+      // Defensive check: Ensure state.users is an array
+      if (!Array.isArray(state.users)) {
+        state.users = [];
+      }
+
       // Check if user already exists
       const userExists = state.users.some(
         (user) => user.email.toLowerCase() === email.toLowerCase()
@@ -29,7 +35,7 @@ const authSlice = createSlice({
         paymentMethods: [], // Array to store payment methods
         orderHistory: [], // Array to store order history
       };
-
+      
       state.users.push(newUser);
       state.currentUser = newUser;
       state.isAuthenticated = true;
@@ -37,6 +43,11 @@ const authSlice = createSlice({
     login: (state, action) => {
       const { email, password } = action.payload;
       
+      // Defensive check: Ensure state.users is an array
+      if (!Array.isArray(state.users)) {
+        state.users = [];
+      }
+
       const user = state.users.find(
         (user) =>
           user.email.toLowerCase() === email.toLowerCase() &&
