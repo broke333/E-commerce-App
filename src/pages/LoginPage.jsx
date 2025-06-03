@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Login from '../components/Login.jsx';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const LoginPage = () => {
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Fix: was 'preventdefault'
+    e.preventDefault();
     setError('');
 
     const { email, password } = formData;
@@ -28,12 +29,11 @@ const LoginPage = () => {
     if (!email.trim() || !password.trim()) {
       setError('All fields are required.');
       return;
-       emill == ""
     }
     
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       setError('Please enter a valid email address.');
-      return; // Added return
+      return;
     }
 
     if (password.length < 6) {
@@ -42,40 +42,24 @@ const LoginPage = () => {
     }
 
     try {
-      dispatch(login({ email, password })); // Fix: was 'signup'
+      dispatch(login({ email, password }));
     } catch (err) {
       setError(err.message || 'An error occurred during login.');
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
     <div className="auth-page">
-      <h2>Login Form</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email} // Fix: removed quotes
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password} // Fix: removed quotes
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <Link to="/signup">Signup here</Link></p>
+      <Login
+        formData={formData}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        error={error}
+      />
     </div>
   );
 };

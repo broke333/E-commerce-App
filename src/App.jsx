@@ -7,7 +7,7 @@ import CartPage from './pages/CartPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
-import './index.css';
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,8 +20,10 @@ const App = () => {
   };
 
   return (
+    
     <div className="container">
-      <nav className="navbar">
+      
+      <nav className="navbar ">
         <Link to="/">Home</Link>
         <Link to="/cart">Cart</Link>
         <Link to="/profile">Profile</Link>

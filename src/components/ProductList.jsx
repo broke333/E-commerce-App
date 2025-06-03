@@ -1,18 +1,18 @@
 import React from 'react';
-import ProductCard from './ProductCard';
-import { useSelector } from 'react-redux';
+import ProductCard from './ProductCard.jsx';
 
-const ProductList =()=>{
-    const {list} = useSelector((state)=> state.products);
-    // console.log(products)        
-
-    return (
-        <div className="product-list">
-            {list.map((product)=> (
-                <ProductCard key={product.id} product={product} />
-            ))}
-        </div>
-    );
+const ProductList = ({ products = [] }) => { // Destructure and default to empty array
+  return (
+    <div className="product-list">
+      {products.length === 0 ? (
+        <p>No products match your search, filter, or sort criteria.</p>
+      ) : (
+        products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))
+      )}
+    </div>
+  );
 };
 
 export default ProductList;
