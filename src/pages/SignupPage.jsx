@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signup } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import Signup from '../components/Signup.jsx';
 
 const SignupPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, error: authError, isLoading } = useSelector((state) => state.auth || {});
-
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    termsAccepted: false,
-  });
-  const [error, setError] = useState('');
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -25,73 +18,56 @@ const SignupPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Update error from Redux state
+  // Formik's form configuration
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      termsAccepted: false,
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .min(3, 'Username must be at least 3 characters')
+        .required('Username is required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+      password: Yup.string()
+        .min(6, 'Password must be at least 6 characters')
+        .required('Password is required'),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .required('Confirm your password'),
+      termsAccepted: Yup.boolean()
+        .oneOf([true], 'You must accept the Terms and Conditions'),
+    }),
+    onSubmit: (values, { setSubmitting, setErrors }) => {
+      dispatch(signup({ username: values.username, email: values.email, password: values.password }))
+        .unwrap()
+        .then(() => {
+          navigate('/profile');
+        })
+        .catch((err) => {
+          setErrors({ form: err.message || 'An error occurred during signup.' });
+        })
+        .finally(() => setSubmitting(false));
+    },
+  });
+
+  // Sync authError with Formik errors
   useEffect(() => {
     if (authError) {
-      setError(authError);
+      formik.setErrors({ form: authError });
     }
-  }, [authError]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleTermsChange = (e) => {
-    setFormData((prev) => ({ ...prev, termsAccepted: e.target.checked }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError('');
-
-    const { username, email, password, confirmPassword, termsAccepted } = formData;
-
-    // Validation
-    if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
-      setError('All fields are required.');
-      return;
-    }
-
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-
-    if (!termsAccepted) {
-      setError('You must agree to the Terms and Conditions.');
-      return;
-    }
-
-    // Dispatch signup action
-    dispatch(signup({ username, email, password }))
-      .unwrap()
-      .then(() => {
-        navigate('/profile');
-      })
-      .catch((err) => {
-        setError(err.message || 'An error occurred during signup.');
-      });
-  };
+  }, [authError, formik]);
 
   return (
     <div className="auth-page">
       <Signup
-        formData={formData}
-        onChange={handleChange}
-        onTermsChange={handleTermsChange}
-        onSubmit={handleSubmit}
-        error={error}
+        formik={formik}
+        isLoading={isLoading}
       />
     </div>
   );

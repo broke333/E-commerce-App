@@ -99,7 +99,7 @@ const Cart = () => {
             <tbody>
               {cartItems.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.name}</td>
+                  <td>{item.title}</td>
                   <td>${item.price.toFixed(2)}</td>
                   <td><button onClick={() => handleDecreasedQuantity(item)}>-</button><span style={{ margin: '0 10px' }}>{item.quantity}</span><button onClick={() => handleIncreasedQuantity(item)}>+</button></td>
                   <td>${(item.price * item.quantity).toFixed(2)}</td>

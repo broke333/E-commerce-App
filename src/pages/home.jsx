@@ -54,69 +54,81 @@ const Home = () => {
   });
 
   return (
-    <div className="container">
-      <h1>Products</h1>
+  <div className="w-full">
+    {/* Header Section */}
+    <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
+      <h1 className="text-2xl font-bold mb-8">Products</h1>
 
       {/* Search, Filter, and Sort Section */}
-      <div className="search-filter-sort">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Search Bar */}
-        <div className="form-group">
-          <label htmlFor="search">Search Products:</label>
+        <div className="w-full">
+          <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+            Search Products:
+          </label>
           <input
             id="search"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Enter book title..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Price Range Filter */}
-        <div className="form-group price-range">
-          <label>Price Range:</label>
-          <div className="price-inputs">
+        <div className="w-full">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Price Range:
+          </label>
+          <div className="flex space-x-2">
             <input
               type="number"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="Min Price"
+              placeholder="Min"
               min="0"
+              className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
-            <span className="price-range-separator">-</span>
             <input
               type="number"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="Max Price"
+              placeholder="Max"
               min="0"
+              className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         {/* Genre Filter */}
-        <div className="form-group">
-          <label htmlFor="genre">Genre:</label>
+        <div className="w-full">
+          <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-2">
+            Genre:
+          </label>
           <select
             id="genre"
             value={selectedGenre}
             onChange={(e) => setSelectedGenre(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Genres</option>
             {genres.map((genre, index) => (
-              <option key={index} value={genre}>
-                {genre}
-              </option>
+              <option key={index} value={genre}>{genre}</option>
             ))}
           </select>
         </div>
 
         {/* Sort Options */}
-        <div className="form-group">
-          <label htmlFor="sort">Sort By:</label>
+        <div className="w-full">
+          <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-2">
+            Sort By:
+          </label>
           <select
             id="sort"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Default</option>
             <option value="price-low-high">Price: Low to High</option>
@@ -126,11 +138,16 @@ const Home = () => {
           </select>
         </div>
       </div>
-
-      {/* Pass sorted and filtered products to ProductList */}
-      <ProductList products={sortedProducts} />
     </div>
-  );
+
+    {/* Products List Section */}
+    <div className="w-full bg-gray-10">
+      <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
+        <ProductList products={sortedProducts} />
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default Home;

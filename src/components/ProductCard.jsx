@@ -20,15 +20,34 @@ const ProductCard = ({ product })=>{
     };  
 
     return (
-        <div className="product-card">
-          <h3>{product.title}</h3>
-          <p><strong>Author:</strong> {product.author}</p>
-          <p><strong>Description:</strong> {product.description}</p>
-          <p><strong>Price:</strong> ${product.price.toFixed(2)}</p>
-          <p><strong>Rating:</strong> {product.rating} / 5</p>
-          <p><strong>Genre:</strong> {product.genre}</p>
-          <button onClick={(handleAddToCart)}>Add to Cart</button>
-        </div>
+        <div className="p-6 flex flex-col space-y-4">
+      <h3 className="text-xl font-bold text-gray-900">{product.title}</h3>
+      
+      <div className="space-y-2">
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Author:</span> {product.author}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Description:</span> {product.description}
+        </p>
+        <p className="text-lg font-bold text-blue-600">
+          ${product.price.toFixed(2)}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Rating:</span> {product.rating} / 5
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Genre:</span> {product.genre}
+        </p>
+      </div>
+
+      <button 
+        onClick={handleAddToCart}
+        className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+      >
+        Add to Cart
+      </button>
+    </div>
     )
 }
 

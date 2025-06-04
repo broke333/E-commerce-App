@@ -21,12 +21,11 @@ const App = () => {
 
   return (
     
-    <div className="container">
-      
-      <nav className="navbar ">
-        <Link to="/">Home</Link>
-        <Link to="/cart">Cart</Link>
-        <Link to="/profile">Profile</Link>
+    <div className="min-h-screen bg-gray-50"> 
+      <nav className="navbar flex justify-between items-center p-4 bg-gray-800 text-white">
+        <Link to="/" className="text-lg font-semibold hover:text-blue-300">Home</Link>
+        <Link to="/cart" className="text-lg font-semibold hover:text-blue-300">Cart</Link>
+        <Link to="/profile" className="text-lg font-semibold hover:text-blue-300">Profile</Link>
         {isAuthenticated ? (
           <button onClick={handleLogout} className="logout-nav-button">
             Logout

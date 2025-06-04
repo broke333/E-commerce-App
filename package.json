@@ -10,16 +10,32 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.5.1",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.4",
-    "tailwindcss": "^4.1.8",
+       "postcss": "^8.4.35",
+    "autoprefixer": "^10.4.17",
+    "tailwindcss": "^3.4.1",
     "vite": "^6.3.5"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "antd": "^5.25.4",
+    "formik": "^2.4.6",
     "react-hot-toast": "^2.5.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.1",
-    "react-toastify": "^11.0.5"
-  }
+    "react-toastify": "^11.0.5",
+    "yup": "^1.6.1"
+  },
+  "description": "A simple and functional e-commerce website built with React, Redux, and React Router. This project implements core features like product listing, shopping cart management, user authentication, and search functionality, all powered by localStorage for data persistence.",
+  "main": "postcss.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/broke333/E-commerce-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/broke333/E-commerce-App/issues"
+  },
+  "homepage": "https://github.com/broke333/E-commerce-App#readme"
 }
