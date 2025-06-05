@@ -2,14 +2,23 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
-import Login from '../components/Login.jsx';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { createSelector } from '@reduxjs/toolkit';
+import Login from '../components/Login.jsx';
+
+// Memoized selector for auth state
+const selectAuth = createSelector(
+  [(state) => state.auth || {}],
+  (auth) => ({
+    isAuthenticated: auth.isAuthenticated || false,
+  })
+);
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, error: authError, isLoading } = useSelector((state) => state.auth || {});
+  const { isAuthenticated } = useSelector(selectAuth);
 
   // Redirect if authenticated
   useEffect(() => {
@@ -17,11 +26,6 @@ const LoginPage = () => {
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
-
-  // Fallback if Yup is not loaded correctly
-  if (!Yup || typeof Yup.object !== 'function') {
-    return <div>Error: Yup library failed to load. Please try refreshing the page or contact support.</div>;
-  }
 
   // Define Yup validation schema
   const validationSchema = Yup.object({
@@ -40,30 +44,21 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: async (values, { setSubmitting, setStatus }) => {
+    onSubmit: (values, { setSubmitting, setStatus }) => {
       try {
-        await dispatch(login(values)).unwrap();
-        // Navigation is handled by useEffect above
+        dispatch(login(values));
+        navigate('/');
       } catch (err) {
         setStatus(err.message || 'An error occurred during login.');
+      } finally {
         setSubmitting(false);
       }
     },
   });
 
-  // Sync Redux error with Formik status
-  useEffect(() => {
-    if (authError) {
-      formik.setStatus(authError);
-    }
-  }, [authError, formik]);
-
   return (
     <div className="auth-page">
-      <Login
-        formik={formik} // Pass the entire formik object
-        isLoading={isLoading}
-      />
+      <Login formik={formik} />
     </div>
   );
 };

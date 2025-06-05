@@ -10,18 +10,11 @@ const authSlice = createSlice({
   reducers: {
     signup: (state, action) => {
       const { username, email, password } = action.payload;
-      console.log('Users:', state.users);
-
-      // Defensive check: Ensure state.users is an array
-      if (!Array.isArray(state.users)) {
-        state.users = [];
-      }
 
       // Check if user already exists
       const userExists = state.users.some(
         (user) => user.email.toLowerCase() === email.toLowerCase()
       );
-      
       if (userExists) {
         throw new Error('User with this email already exists.');
       }
@@ -31,22 +24,17 @@ const authSlice = createSlice({
         username,
         email: email.toLowerCase(),
         password, // In a real app, hash the password
-        addresses: [], // Array to store addresses
-        paymentMethods: [], // Array to store payment methods
-        orderHistory: [], // Array to store order history
+        addresses: [],
+        paymentMethods: [],
+        orderHistory: [],
       };
-      
+
       state.users.push(newUser);
       state.currentUser = newUser;
       state.isAuthenticated = true;
     },
     login: (state, action) => {
       const { email, password } = action.payload;
-      
-      // Defensive check: Ensure state.users is an array
-      if (!Array.isArray(state.users)) {
-        state.users = [];
-      }
 
       const user = state.users.find(
         (user) =>
@@ -67,20 +55,15 @@ const authSlice = createSlice({
     },
     updateProfile: (state, action) => {
       const { addresses, paymentMethods } = action.payload;
-      
       if (!state.currentUser) {
         throw new Error('No user is logged in.');
       }
-
       if (addresses) {
         state.currentUser.addresses = addresses;
       }
-      
       if (paymentMethods) {
         state.currentUser.paymentMethods = paymentMethods;
       }
-
-      // Update the user in the users array
       const userIndex = state.users.findIndex(
         (user) => user.id === state.currentUser.id
       );
@@ -90,14 +73,10 @@ const authSlice = createSlice({
     },
     addOrderToHistory: (state, action) => {
       const order = action.payload;
-      
       if (!state.currentUser) {
         throw new Error('No user is logged in.');
       }
-
       state.currentUser.orderHistory.push(order);
-      
-      // Update the user in the users array
       const userIndex = state.users.findIndex(
         (user) => user.id === state.currentUser.id
       );

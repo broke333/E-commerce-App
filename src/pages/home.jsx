@@ -54,13 +54,13 @@ const Home = () => {
   });
 
   return (
-  <div className="w-full">
+  <div className="w-full grid grid-cols-10 h-screen">
     {/* Header Section */}
-    <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
+    <div className="w-full col-span-2 max-w-[2000px] mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-8">Products</h1>
 
       {/* Search, Filter, and Sort Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-row gap-6 mb-8">
         {/* Search Bar */}
         <div className="w-full">
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
@@ -141,7 +141,7 @@ const Home = () => {
     </div>
 
     {/* Products List Section */}
-    <div className="w-full bg-gray-10">
+    <div className="w-full col-span-8 bg-gray-10">
       <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
         <ProductList products={sortedProducts} />
       </div>

@@ -49,7 +49,7 @@ const ProfilePage = () => {
       alert('Please fill all address fields.');
       return;
     }
-    const updatedAddresses = [...currentUser.addresses, newAddress];
+    const updatedAddresses = [...(currentUser.addresses || []), newAddress];
     dispatch(updateProfile({ addresses: updatedAddresses }));
     setNewAddress({ street: '', city: '', state: '', postalCode: '', country: '' });
   };
@@ -71,7 +71,7 @@ const ProfilePage = () => {
       alert('Last 4 digits must be a 4-digit number.');
       return;
     }
-    const updatedPaymentMethods = [...currentUser.paymentMethods, newPayment];
+    const updatedPaymentMethods = [...(currentUser.paymentMethods || []), newPayment];
     dispatch(updateProfile({ paymentMethods: updatedPaymentMethods }));
     setNewPayment({ cardType: '', lastFour: '', expiry: '' });
   };
@@ -83,157 +83,205 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container">
-      <h1>My Profile</h1>
-
-      {/* User Info */}
-      <div className="profile-info">
-        <h2>Welcome, {currentUser.username}!</h2>
-        <p>Email: {currentUser.email}</p>
+    <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen bg-gray-50">
+      {/* User Info Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">My Profile</h1>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Welcome, {currentUser.username || 'User'}!
+        </h2>
+        <p className="text-gray-600">Email: {currentUser.email || 'N/A'}</p>
       </div>
 
-      {/* Order History */}
-      <div className="profile-section">
-        <h2>Order History</h2>
-        {currentUser.orderHistory.length === 0 ? (
-          <p>No orders yet.</p>
+      {/* Order History Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Order History</h2>
+        {(currentUser.orderHistory || []).length === 0 ? (
+          <p className="text-gray-500">No orders yet.</p>
         ) : (
-          <ul>
-            {currentUser.orderHistory.map((order, index) => (
-              <li key={index}>
-                Order #{order.id} - Date: {order.date} - Total: ${order.total}
-                <ul>
-                  {order.items.map((item, i) => (
-                    <li key={i}>{item.name} - ${item.price} x {item.quantity}</li>
+          <ul className="space-y-4">
+            {(currentUser.orderHistory || []).map((order, index) => (
+              <li key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">Order #{order.id}</span>
+                  <span className="text-gray-600">{order.date}</span>
+                </div>
+                <ul className="space-y-2">
+                  {(order.items || []).map((item, i) => (
+                    <li key={i} className="flex justify-between text-gray-600">
+                      <span>{item.name}</span>
+                      <span>${item.price} x {item.quantity}</span>
+                    </li>
                   ))}
                 </ul>
+                <div className="mt-2 pt-2 border-t text-right">
+                  <span className="font-semibold text-blue-600">
+                    Total: ${order.total}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      {/* Saved Addresses */}
-      <div className="profile-section">
-        <h2>Saved Addresses</h2>
-        {currentUser.addresses.length === 0 ? (
-          <p>No saved addresses.</p>
+      {/* Addresses Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Saved Addresses</h2>
+        {(currentUser.addresses || []).length === 0 ? (
+          <p className="text-gray-500">No saved addresses.</p>
         ) : (
-          <ul>
-            {currentUser.addresses.map((address, index) => (
-              <li key={index}>
-                {address.street}, {address.city}, {address.state}, {address.postalCode}, {address.country}
-                <button onClick={() => handleDeleteAddress(index)}>Delete</button>
+          <ul className="space-y-4 mb-6">
+            {(currentUser.addresses || []).map((address, index) => (
+              <li key={index} className="flex justify-between items-center p-4 border rounded-lg hover:shadow-md transition-shadow">
+                <span className="text-gray-700">
+                  {address.street}, {address.city}, {address.state}, {address.postalCode}, {address.country}
+                </span>
+                <button 
+                  onClick={() => handleDeleteAddress(index)}
+                  className="px-3 py-1 text-red-600 hover:text-red-800 transition-colors rounded"
+                >
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
         )}
 
-        <h3>Add New Address</h3>
-        <form onSubmit={handleAddAddress}>
-          <div className="form-group">
-            <label>Street:</label>
-            <input
-              type="text"
-              name="street"
-              value={newAddress.street}
-              onChange={handleAddressChange}
-              placeholder="Enter street"
-            />
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Add New Address</h3>
+        <form onSubmit={handleAddAddress} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Street:</label>
+              <input
+                type="text"
+                name="street"
+                value={newAddress.street}
+                onChange={handleAddressChange}
+                placeholder="Enter street"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">City:</label>
+              <input
+                type="text"
+                name="city"
+                value={newAddress.city}
+                onChange={handleAddressChange}
+                placeholder="Enter city"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">State:</label>
+              <input
+                type="text"
+                name="state"
+                value={newAddress.state}
+                onChange={handleAddressChange}
+                placeholder="Enter state"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Postal Code:</label>
+              <input
+                type="text"
+                name="postalCode"
+                value={newAddress.postalCode}
+                onChange={handleAddressChange}
+                placeholder="Enter postal code"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Country:</label>
+              <input
+                type="text"
+                name="country"
+                value={newAddress.country}
+                onChange={handleAddressChange}
+                placeholder="Enter country"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label>City:</label>
-            <input
-              type="text"
-              name="city"
-              value={newAddress.city}
-              onChange={handleAddressChange}
-              placeholder="Enter city"
-            />
-          </div>
-          <div className="form-group">
-            <label>State:</label>
-            <input
-              type="text"
-              name="state"
-              value={newAddress.state}
-              onChange={handleAddressChange}
-              placeholder="Enter state"
-            />
-          </div>
-          <div className="form-group">
-            <label>Postal Code:</label>
-            <input
-              type="text"
-              name="postalCode"
-              value={newAddress.postalCode}
-              onChange={handleAddressChange}
-              placeholder="Enter postal code"
-            />
-          </div>
-          <div className="form-group">
-            <label>Country:</label>
-            <input
-              type="text"
-              name="country"
-              value={newAddress.country}
-              onChange={handleAddressChange}
-              placeholder="Enter country"
-            />
-          </div>
-          <button type="submit">Add Address</button>
+          <button 
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Add Address
+          </button>
         </form>
       </div>
 
-      {/* Payment Methods */}
-      <div className="profile-section">
-        <h2>Payment Methods</h2>
-        {currentUser.paymentMethods.length === 0 ? (
-          <p>No saved payment methods.</p>
+      {/* Payment Methods Section */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Payment Methods</h2>
+        {(currentUser.paymentMethods || []).length === 0 ? (
+          <p className="text-gray-500">No saved payment methods.</p>
         ) : (
-          <ul>
-            {currentUser.paymentMethods.map((payment, index) => (
-              <li key={index}>
-                {payment.cardType} - Ending in {payment.lastFour} - Expires {payment.expiry}
-                <button onClick={() => handleDeletePayment(index)}>Delete</button>
+          <ul className="space-y-4 mb-6">
+            {(currentUser.paymentMethods || []).map((payment, index) => (
+              <li key={index} className="flex justify-between items-center p-4 border rounded-lg hover:shadow-md transition-shadow">
+                <span className="text-gray-700">
+                  {payment.cardType} - Ending in {payment.lastFour} - Expires {payment.expiry}
+                </span>
+                <button 
+                  onClick={() => handleDeletePayment(index)}
+                  className="px-3 py-1 text-red-600 hover:text-red-800 transition-colors rounded"
+                >
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
         )}
 
-        <h3>Add New Payment Method</h3>
-        <form onSubmit={handleAddPayment}>
-          <div className="form-group">
-            <label>Card Type:</label>
-            <input
-              type="text"
-              name="cardType"
-              value={newPayment.cardType}
-              onChange={handlePaymentChange}
-              placeholder="e.g., Visa, MasterCard"
-            />
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Add New Payment Method</h3>
+        <form onSubmit={handleAddPayment} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Card Type:</label>
+              <input
+                type="text"
+                name="cardType"
+                value={newPayment.cardType}
+                onChange={handlePaymentChange}
+                placeholder="e.g., Visa, MasterCard"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Last 4 Digits:</label>
+              <input
+                type="text"
+                name="lastFour"
+                value={newPayment.lastFour}
+                onChange={handlePaymentChange}
+                placeholder="Last 4 digits"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Expiry Date:</label>
+              <input
+                type="text"
+                name="expiry"
+                value={newPayment.expiry}
+                onChange={handlePaymentChange}
+                placeholder="MM/YY"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label>Last 4 Digits:</label>
-            <input
-              type="text"
-              name="lastFour"
-              value={newPayment.lastFour}
-              onChange={handlePaymentChange}
-              placeholder="Last 4 digits"
-            />
-          </div>
-          <div className="form-group">
-            <label>Expiry Date:</label>
-            <input
-              type="text"
-              name="expiry"
-              value={newPayment.expiry}
-              onChange={handlePaymentChange}
-              placeholder="MM/YY"
-            />
-          </div>
-          <button type="submit">Add Payment Method</button>
+          <button 
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Add Payment Method
+          </button>
         </form>
       </div>
     </div>

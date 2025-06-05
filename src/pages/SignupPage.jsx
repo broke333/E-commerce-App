@@ -3,13 +3,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signup } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
+import { createSelector } from '@reduxjs/toolkit';
 import * as Yup from 'yup';
 import Signup from '../components/Signup.jsx';
+
+// Memoized selector for auth state
+const selectAuth = createSelector(
+  [(state) => state.auth || {}],
+  (auth) => ({
+    isAuthenticated: auth.isAuthenticated || false,
+  })
+);
 
 const SignupPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, error: authError, isLoading } = useSelector((state) => state.auth || {});
+  const { isAuthenticated } = useSelector(selectAuth);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -43,32 +52,21 @@ const SignupPage = () => {
       termsAccepted: Yup.boolean()
         .oneOf([true], 'You must accept the Terms and Conditions'),
     }),
-    onSubmit: (values, { setSubmitting, setErrors }) => {
-      dispatch(signup({ username: values.username, email: values.email, password: values.password }))
-        .unwrap()
-        .then(() => {
-          navigate('/profile');
-        })
-        .catch((err) => {
-          setErrors({ form: err.message || 'An error occurred during signup.' });
-        })
-        .finally(() => setSubmitting(false));
+    onSubmit: (values, { setSubmitting, setStatus }) => {
+      try {
+        dispatch(signup({ username: values.username, email: values.email, password: values.password }));
+        navigate('/profile');
+      } catch (err) {
+        setStatus(err.message || 'An error occurred during signup.');
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
-  // Sync authError with Formik errors
-  useEffect(() => {
-    if (authError) {
-      formik.setErrors({ form: authError });
-    }
-  }, [authError, formik]);
-
   return (
     <div className="auth-page">
-      <Signup
-        formik={formik}
-        isLoading={isLoading}
-      />
+      <Signup formik={formik} />
     </div>
   );
 };

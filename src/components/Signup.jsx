@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'antd';
 
-const Signup = ({ formik, isLoading }) => {
+const Signup = ({ formik }) => {
   return (
     <form onSubmit={formik.handleSubmit} className="max-w-sm mx-auto">
       <h2 className="text-lg font-bold text-center mb-5">Create an Account</h2>
 
       {/* Display global form error */}
-      {formik.errors.form && <p className="text-red-500 text-center mb-4">{formik.errors.form}</p>}
+      {formik.status && <p className="text-red-500 text-center mb-4">{formik.status}</p>}
 
       {/* Username Field */}
       <div className="mb-5">
@@ -117,11 +116,12 @@ const Signup = ({ formik, isLoading }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        disabled={isLoading || formik.isSubmitting}
-        loading={isLoading || formik.isSubmitting}  
+        className={`w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-experimental: -4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${
+          formik.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+        disabled={formik.isSubmitting}
       >
-        {isLoading || formik.isSubmitting ? 'Signing Up...' : 'Sign Up'}
+        {formik.isSubmitting ? 'Signing Up...' : 'Sign Up'}
       </button>
 
       <p className="text-center mt-4 text-sm text-gray-900 dark:text-gray-300">
