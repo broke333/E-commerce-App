@@ -55,108 +55,109 @@ const Home = () => {
 
   return (
     <>
-    {/* Store Header */}
+      {/* Store Header */}
       {/* <div className="w-full bg-gray-800 text-white py-4 mb-6">
         <div className="max-w-[2000px] mx-auto px-4">
           <h1 className="text-3xl font-bold text-center">Book Stop</h1>
         </div>
       </div> */}
-    
-  <div className="w-full grid grid-cols-10 h-screen">
-    {/* Header Section */}
-    <div className="w-full col-span-2 max-w-[2000px] mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-8">Products</h1>
 
-      {/* Search, Filter, and Sort Section */}
-      <div className="grid grid-row gap-6 mb-8">
-        {/* Search Bar */}
-        <div className="w-full">
-          <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-            Search Products:
-          </label>
-          <input
-            id="search"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Enter book title..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      {/* Main Layout */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-10 h-screen relative">
+        {/* Sidebar Section (Filters) */}
+        <div className="col-span-1 md:col-span-2 max-w-[2000px] mx-auto px-4 py-6 sticky top-0 h-fit bg-white shadow-md sticky">
+          <h1 className="text-2xl font-bold mb-8">Products</h1>
 
-        {/* Price Range Filter */}
-        <div className="w-full">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Price Range:
-          </label>
-          <div className="flex space-x-2">
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="Min"
-              min="0"
-              className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="Max"
-              min="0"
-              className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Search, Filter, and Sort Section */}
+          <div className="grid grid-rows gap-6 mb-8">
+            {/* Search Bar */}
+            <div className="w-full">
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+                Search Products:
+              </label>
+              <input
+                id="search"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Enter book title..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Price Range:
+              </label>
+              <div className="flex space-x-2">
+                <input
+                  type="number"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  placeholder="Min"
+                  min="0"
+                  className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="number"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  placeholder="Max"
+                  min="0"
+                  className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Genre Filter */}
+            <div className="w-full">
+              <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-2">
+                Genre:
+              </label>
+              <select
+                id="genre"
+                value={selectedGenre}
+                onChange={(e) => setSelectedGenre(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Genres</option>
+                {genres.map((genre, index) => (
+                  <option key={index} value={genre}>{genre}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort Options */}
+            <div className="w-full">
+              <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-2">
+                Sort By:
+              </label>
+              <select
+                id="sort"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Default</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="name-a-z">Title: A to Z</option>
+                <option value="name-z-a">Title: Z to A</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Genre Filter */}
-        <div className="w-full">
-          <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-2">
-            Genre:
-          </label>
-          <select
-            id="genre"
-            value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Genres</option>
-            {genres.map((genre, index) => (
-              <option key={index} value={genre}>{genre}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Sort Options */}
-        <div className="w-full">
-          <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-2">
-            Sort By:
-          </label>
-          <select
-            id="sort"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Default</option>
-            <option value="price-low-high">Price: Low to High</option>
-            <option value="price-high-low">Price: High to Low</option>
-            <option value="name-a-z">Title: A to Z</option>
-            <option value="name-z-a">Title: Z to A</option>
-          </select>
+        {/* Products List Section */}
+        <div className="col-span-1 md:col-span-8 bg-gray-100 overflow-y-auto">
+          <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
+            <ProductList products={sortedProducts} />
+          </div>
         </div>
       </div>
-    </div>
-
-    {/* Products List Section */}
-    <div className="w-full col-span-8 bg-gray-10">
-      <div className="w-full max-w-[2000px] mx-auto px-4 py-6">
-        <ProductList products={sortedProducts} />
-      </div>
-    </div>
-  </div>
-</>
-);
+    </>
+  );
 };
 
 export default Home;
