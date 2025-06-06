@@ -9,17 +9,26 @@ import SignupPage from './pages/SignupPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { UserCircleIcon as UserCircleSolidIcon } from '@heroicons/react/24/solid'; // Logged-in
-import { UserCircleIcon as UserCircleOutlineIcon } from '@heroicons/react/24/outline'; // Logged-out
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, currentUser } = useSelector((state) => state.auth || {});
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
+  };
+
+  // Generate initials for avatar fallback
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -36,9 +45,18 @@ const App = () => {
         pauseOnHover
         theme="light"
       />
-      <nav className="navbar flex justify-between items-center p-4 bg-gray-800 text-white pl-[23%]">
-        <Link to="/" className="text-lg font-semibold hover:text-blue-300">Home</Link>
-        <Link to="/cart" className="text-lg font-semibold hover:text-blue-300">Cart</Link>
+      <nav className="navbar flex justify-between items-center p-4 bg-gray-800 text-white ">
+    <div className="flex items-center space-x-6">
+    <h1 className="text-2xl font-bold text-blue-300">Book Store</h1>
+    </div>
+    <div className="flex items-center space-x-6">
+    
+        <Link to="/" className="text-lg font-semibold hover:text-blue-300">
+          Home
+        </Link>
+        <Link to="/cart" className="text-lg font-semibold hover:text-blue-300">
+          Cart
+        </Link>
         {isAuthenticated ? (
           <button
             onClick={handleLogout}
@@ -48,17 +66,43 @@ const App = () => {
           </button>
         ) : (
           <>
-            <Link to="/login" className="text-lg font-semibold hover:text-blue-300">Login</Link>
-            <Link to="/signup" className="text-lg font-semibold hover:text-blue-300">Signup</Link>
+            <Link to="/login" className="text-lg font-semibold hover:text-blue-300">
+              Login
+            </Link>
+            <Link to="/signup" className="text-lg font-semibold hover:text-blue-300">
+              Signup
+            </Link>
           </>
         )}
-        <Link to="/profile" className="text-lg font-semibold hover:text-blue-300" title="Profile">
+        <Link
+          to="/profile"
+          className="flex items-center space-x-2 hover:text-blue-300"
+          title="Profile"
+          aria-label={isAuthenticated ? `Profile for ${currentUser.email}` : 'Profile'}
+        >
           {isAuthenticated ? (
-            <UserCircleSolidIcon className="h-8 w-8" />
+            <>
+              {currentUser.profileImage ? (
+                <img
+                  src={currentUser.profileImage}
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+                  {getInitials(currentUser.username)}
+                </div>
+              )}
+              <span className="text-sm font-medium">{currentUser.email}</span>
+            </>
           ) : (
-            <UserCircleOutlineIcon className="h-8 w-8" />
+            <div className="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center text-white text-sm font-semibold">
+              U
+            </div>
           )}
         </Link>
+        </div>
+      
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -72,12 +116,5 @@ const App = () => {
   );
 };
 
-// const App = () => {
-//   return (
-//     <Router>
-//       <AppContent />
-//     </Router>
-//   );
-// };
 
 export default App;

@@ -54,6 +54,14 @@ const Home = () => {
   });
 
   return (
+    <>
+    {/* Store Header */}
+      {/* <div className="w-full bg-gray-800 text-white py-4 mb-6">
+        <div className="max-w-[2000px] mx-auto px-4">
+          <h1 className="text-3xl font-bold text-center">Book Stop</h1>
+        </div>
+      </div> */}
+    
   <div className="w-full grid grid-cols-10 h-screen">
     {/* Header Section */}
     <div className="w-full col-span-2 max-w-[2000px] mx-auto px-4 py-6">
@@ -147,6 +155,7 @@ const Home = () => {
       </div>
     </div>
   </div>
+</>
 );
 };
 

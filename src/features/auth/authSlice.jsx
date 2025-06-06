@@ -28,7 +28,6 @@ const authSlice = createSlice({
         paymentMethods: [],
         orderHistory: [],
       };
-
       state.users.push(newUser);
       state.currentUser = newUser;
       state.isAuthenticated = true;
@@ -46,7 +45,11 @@ const authSlice = createSlice({
         throw new Error('Invalid email or password.');
       }
 
-      state.currentUser = user;
+      state.currentUser = {
+        ...user,
+        email: user.email, // Ensure email is included
+        profileImage: user.profileImage || null, // Include profileImage if available
+      };
       state.isAuthenticated = true;
     },
     logout: (state) => {
@@ -54,9 +57,23 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
     },
     updateProfile: (state, action) => {
-      const { addresses, paymentMethods } = action.payload;
+      const { username, email, addresses, paymentMethods } = action.payload; // Fix: Destructure all possible payload fields
       if (!state.currentUser) {
         throw new Error('No user is logged in.');
+      }
+      if (username) {
+        state.currentUser.username = username;
+      }
+      if (email) {
+        const emailExists = state.users.some(
+          (user) => // Fix: Correct parameter name
+            user.email.toLowerCase() === email.toLowerCase() &&
+            user.id !== state.currentUser.id
+        );
+        if (emailExists) {
+          throw new Error('Email already exists.');
+        }
+        state.currentUser.email = email.toLowerCase();
       }
       if (addresses) {
         state.currentUser.addresses = addresses;

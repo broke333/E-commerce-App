@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { createSelector } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify'; // Added import
 import Login from '../components/Login.jsx';
 
 // Memoized selector for auth state
@@ -44,12 +45,14 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema,
-    onSubmit: (values, { setSubmitting, setStatus }) => {
+    onSubmit: async (values, { setSubmitting, setStatus }) => {
       try {
-        dispatch(login(values));
+        await dispatch(login(values));
+        toast.success('Logged in successfully'); // Fixed typo
         navigate('/');
       } catch (err) {
         setStatus(err.message || 'An error occurred during login.');
+        toast.error(err.message || 'An error occurred during login.');
       } finally {
         setSubmitting(false);
       }
