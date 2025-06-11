@@ -38,7 +38,7 @@ const Home = () => {
   });
 
   // Sort the filtered products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedProducts = (filteredProducts).sort((a, b) => {
     switch (sortOption) {
       case 'price-low-high':
         return (a.price || 0) - (b.price || 0);
@@ -55,13 +55,6 @@ const Home = () => {
 
   return (
     <>
-      {/* Store Header */}
-      {/* <div className="w-full bg-gray-800 text-white py-4 mb-6">
-        <div className="max-w-[2000px] mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center">Book Stop</h1>
-        </div>
-      </div> */}
-
       {/* Main Layout */}
       <div className="w-full grid grid-cols-1 md:grid-cols-10 h-screen relative">
         {/* Sidebar Section (Filters) */}

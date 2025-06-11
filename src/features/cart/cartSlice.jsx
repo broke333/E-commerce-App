@@ -4,6 +4,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [],
+    userId: null,
     // totalQuantity: 0,
     // totalPrice: 0,
   },

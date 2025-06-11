@@ -135,4 +135,13 @@ export const commonProducts = [
     genre: "Philosophy",
     description: "An ancient treatise on military strategy and tactics.",
   },
+  {
+    id: 16,
+    title: "Game of Thrones",
+    author: "George R.R. Martin",
+    price: 15.99,
+    rating: 4.7,
+    genre: "Fantasy",
+    description: "A tale of power, intrigue, and war in the Seven Kingdoms.",
+  },
 ];

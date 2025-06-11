@@ -53,8 +53,17 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
+      // if(state.currentUser){
+      //   const userIndex= state.users.findIndex(
+      //     (user)=>user.id===state.currentUser.id
+      //   );
+      //   if(userIndex=-1){
+      //     // state.users[userIndex]={...}
+      //   }
+      // }
       state.currentUser = null;
       state.isAuthenticated = false;
+      //dispatchEvent(clearCart());
     },
     updateProfile: (state, action) => {
       const { username, email, addresses, paymentMethods } = action.payload; // Fix: Destructure all possible payload fields
